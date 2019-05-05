@@ -6,6 +6,7 @@ import Playlist from './Components/Playlist/Playlist';
 import Spotify from './util/Spotify';
 
 class App extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -13,28 +14,31 @@ class App extends React.Component {
       playlistName: 'New Playlist',
       playlistTracks: []
     }
-    /*this.searchResults = this.searchResults.bind(this);*/
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
+
   addTrack(track) {
-    let tracks = this.state.playlistTracks;
+    const tracks = this.state.playlistTracks.slice();
     if (!tracks.find(playlistTrack => playlistTrack.id === track.id)) {
       tracks.push(track);
       this.setState({ playlistTracks: tracks});
     }
   }
+
   removeTrack(track) {
     let tracks = this.state.playlistTracks;
     tracks = tracks.filter(playlistTrack => playlistTrack.id !== track.id);
     this.setState({playlistTracks: tracks});
   }
+
   updatePlaylistName(name) {
     this.setState({playlistName: name});
   }
+
   savePlaylist() {
     const trackURIs = this.state.playlistTracks.map(track => track.uri);
     Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() => {
@@ -44,11 +48,13 @@ class App extends React.Component {
       });
     });
   }
+
   search(term) {
     Spotify.search(term).then(searchResults => {
       this.setState({searchResults: searchResults})
     });
   }
+  
   render() {
     return (
       <div>
